@@ -1,3 +1,13 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -19,6 +29,15 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val apiKey = localProperties.getProperty("NEWS_API_KEY")
+            ?: throw GradleException("NEWS_API_KEY missing in local.properties")
+
+        buildConfigField(
+            "String",
+            "NEWS_API_KEY",
+            "\"$apiKey\""
+        )
     }
 
     buildTypes {
@@ -42,10 +61,6 @@ android {
         compose = true
         buildConfig = true
     }
-}
-
-ksp {
-    arg("correctErrorTypes", "true")
 }
 
 dependencies {
@@ -83,7 +98,4 @@ dependencies {
     implementation(libs.coroutines.android)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
-
-    androidTestImplementation(libs.hilt.testing)
-    kspAndroidTest(libs.hilt.compiler)
 }
