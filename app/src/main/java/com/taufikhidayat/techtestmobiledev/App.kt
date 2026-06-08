@@ -1,4 +1,4 @@
-package com.taufikhidayat.techtestmobiledev.core.app
+package com.taufikhidayat.techtestmobiledev
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

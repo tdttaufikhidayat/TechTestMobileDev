@@ -1,27 +1,24 @@
 package com.taufikhidayat.techtestmobiledev.di
 
-import com.taufikhidayat.techtestmobiledev.core.network.ApiClient
 import com.taufikhidayat.techtestmobiledev.data.remote.api.NewsApiService
+import com.taufikhidayat.techtestmobiledev.data.repository.NewsRepositoryImpl
+import com.taufikhidayat.techtestmobiledev.domain.repository.NewsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
-        return ApiClient.retrofit
-    }
-
-    @Provides
-    @Singleton
-    fun provideNewsApiService(retrofit: Retrofit): NewsApiService {
-        return retrofit.create(NewsApiService::class.java)
+    fun provideNewsRepository(
+        api: NewsApiService,
+        apiKey: String
+    ): NewsRepository {
+        return NewsRepositoryImpl(api, apiKey)
     }
 }

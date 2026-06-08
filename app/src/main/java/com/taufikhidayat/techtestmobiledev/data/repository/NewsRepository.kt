@@ -1,37 +1,43 @@
 package com.taufikhidayat.techtestmobiledev.data.repository
 
-import com.taufikhidayat.techtestmobiledev.BuildConfig
 import com.taufikhidayat.techtestmobiledev.core.result.Result
+import com.taufikhidayat.techtestmobiledev.data.mapper.toDomain
 import com.taufikhidayat.techtestmobiledev.data.remote.api.NewsApiService
-import com.taufikhidayat.techtestmobiledev.data.remote.dto.ArticlesResponse
-import com.taufikhidayat.techtestmobiledev.data.remote.dto.SourcesResponse
+import com.taufikhidayat.techtestmobiledev.domain.model.Article
+import com.taufikhidayat.techtestmobiledev.domain.model.Source
+import com.taufikhidayat.techtestmobiledev.domain.repository.NewsRepository
 import javax.inject.Inject
 
-class NewsRepository @Inject constructor(
-    private val api: NewsApiService
-) {
+class NewsRepositoryImpl @Inject constructor(
+    private val api: NewsApiService,
+    private val apiKey: String
+) : NewsRepository {
 
-    suspend fun getSources(category: String): Result<SourcesResponse> {
+    override suspend fun getSources(category: String): Result<List<Source>> {
         return safeApiCall {
-            api.getSources(category, BuildConfig.NEWS_API_KEY)
+            api.getSources(category, apiKey)
+                .sources
+                .map { it.toDomain() }
         }
     }
 
-    suspend fun getArticles(source: String): Result<ArticlesResponse> {
+    override suspend fun getArticles(source: String): Result<List<Article>> {
         return safeApiCall {
-            api.getArticles(source, BuildConfig.NEWS_API_KEY)
+            api.getArticles(source, apiKey)
+                .articles
+                .map { it.toDomain() }
         }
     }
 
-    suspend fun searchArticles(query: String): Result<ArticlesResponse> {
+    override suspend fun searchArticles(query: String): Result<List<Article>> {
         return safeApiCall {
-            api.searchArticles(query, BuildConfig.NEWS_API_KEY)
+            api.searchArticles(query, apiKey)
+                .articles
+                .map { it.toDomain() }
         }
     }
 
-    private inline fun <T> safeApiCall(
-        call: () -> T
-    ): Result<T> {
+    private inline fun <T> safeApiCall(call: () -> T): Result<T> {
         return try {
             Result.Success(call())
         } catch (e: Exception) {

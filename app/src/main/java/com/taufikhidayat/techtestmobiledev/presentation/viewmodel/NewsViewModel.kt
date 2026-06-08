@@ -1,10 +1,10 @@
-package com.taufikhidayat.techtestmobiledev.ui.viewmodel
+package com.taufikhidayat.techtestmobiledev.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.taufikhidayat.techtestmobiledev.core.result.Result
-import com.taufikhidayat.techtestmobiledev.data.repository.NewsRepository
-import com.taufikhidayat.techtestmobiledev.ui.state.NewsUiState
+import com.taufikhidayat.techtestmobiledev.domain.repository.NewsRepository
+import com.taufikhidayat.techtestmobiledev.presentation.state.NewsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,18 +20,17 @@ class NewsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(NewsUiState())
     val uiState: StateFlow<NewsUiState> = _uiState
 
-    fun getSources(category: String) {
+    fun loadSources(category: String) {
         viewModelScope.launch {
-
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            _uiState.update { it.copy(isLoading = true) }
 
             when (val result = repository.getSources(category)) {
-
                 is Result.Success -> {
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            sources = result.data
+                            sources = result.data,
+                            error = null
                         )
                     }
                 }
@@ -50,18 +49,17 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    fun getArticles(source: String) {
+    fun loadArticles(source: String) {
         viewModelScope.launch {
-
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            _uiState.update { it.copy(isLoading = true) }
 
             when (val result = repository.getArticles(source)) {
-
                 is Result.Success -> {
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            articles = result.data
+                            articles = result.data,
+                            error = null
                         )
                     }
                 }
