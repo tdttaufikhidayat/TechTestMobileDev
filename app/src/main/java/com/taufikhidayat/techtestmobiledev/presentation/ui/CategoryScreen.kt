@@ -11,23 +11,36 @@ import androidx.compose.ui.unit.dp
 fun CategoryScreen(
     onCategoryClick: (String) -> Unit
 ) {
-    val categories = listOf("business", "sports", "technology", "health")
+    val categories = listOf(
+        "business",
+        "sports",
+        "technology",
+        "health",
+        "entertainment"
+    )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text("Categories", style = MaterialTheme.typography.headlineMedium)
+
+        Text(
+            text = "Categories",
+            style = MaterialTheme.typography.headlineMedium
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         categories.forEach { category ->
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-                    .clickable { onCategoryClick(category) }
+                    .padding(vertical = 6.dp)
+                    .clickable {
+                        onCategoryClick(category)
+                    }
             ) {
                 Text(
                     text = category,

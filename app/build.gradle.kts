@@ -1,11 +1,9 @@
 import java.util.Properties
-import java.io.FileInputStream
 
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-
+val properties = Properties()
+val localPropertiesFile = project.rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
-    localProperties.load(FileInputStream(localPropertiesFile))
+    properties.load(localPropertiesFile.inputStream())
 }
 
 plugins {
@@ -13,8 +11,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
-    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -30,13 +28,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val apiKey = localProperties.getProperty("NEWS_API_KEY")
-            ?: throw GradleException("NEWS_API_KEY missing in local.properties")
-
         buildConfigField(
             "String",
             "NEWS_API_KEY",
-            "\"$apiKey\""
+            properties.getProperty("NEWS_API_KEY") ?: "\"\""
         )
     }
 
@@ -50,16 +45,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
-
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
     buildFeatures {
-        compose = true
         buildConfig = true
+        compose = true
     }
 }
 
@@ -81,21 +75,23 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    // Navigation & Hilt
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Dagger Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
+
+    // Networking
     implementation(libs.retrofit)
-    implementation(libs.retrofit.gson)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging)
-    implementation(libs.navigation.compose)
-    implementation(libs.lifecycle.runtime.compose)
-    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp.logging.interceptor)
+
+    // Paging 3
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
+
+    // Image Loading
     implementation(libs.coil.compose)
-    implementation(libs.paging.runtime)
-    implementation(libs.paging.compose)
-    implementation(libs.timber)
-    implementation(libs.coroutines.android)
-    testImplementation(libs.mockk)
-    testImplementation(libs.turbine)
 }

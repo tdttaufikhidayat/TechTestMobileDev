@@ -1,7 +1,5 @@
-package com.taufikhidayat.techtestmobiledev
-
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class App : Application()
+class NewsApplication : Application()
