@@ -22,6 +22,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.taufikhidayat.techtestmobiledev.data.remote.dto.ArticleDto
 import com.taufikhidayat.techtestmobiledev.presentation.viewmodel.ArticleViewModel
+import com.taufikhidayat.techtestmobiledev.utils.toFriendlyMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +64,6 @@ fun ArticleScreen(
                 }
             }
 
-            // Handling state saat pertama kali load atau load page berikutnya (Story #6 & #7)
             articles.apply {
                 when {
                     loadState.refresh is LoadState.Loading -> {
@@ -75,7 +75,12 @@ fun ArticleScreen(
                     }
                     loadState.append is LoadState.Loading -> {
                         item {
-                            Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
                                 CircularProgressIndicator()
                             }
                         }
@@ -83,13 +88,19 @@ fun ArticleScreen(
                     loadState.refresh is LoadState.Error -> {
                         val e = loadState.refresh as LoadState.Error
                         item {
-                            ErrorItem(message = e.error.localizedMessage ?: "Error", onRetry = { retry() })
+                            ErrorItem(
+                                message = e.error.toFriendlyMessage(),
+                                onRetry = { retry() }
+                            )
                         }
                     }
                     loadState.append is LoadState.Error -> {
                         val e = loadState.append as LoadState.Error
                         item {
-                            ErrorItem(message = e.error.localizedMessage ?: "Error", onRetry = { retry() })
+                            ErrorItem(
+                                message = e.error.toFriendlyMessage(),
+                                onRetry = { retry() }
+                            )
                         }
                     }
                 }
@@ -147,7 +158,9 @@ fun ArticleItem(article: ArticleDto, onClick: () -> Unit) {
 @Composable
 fun ErrorItem(message: String, onRetry: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = message, color = Color.Red)

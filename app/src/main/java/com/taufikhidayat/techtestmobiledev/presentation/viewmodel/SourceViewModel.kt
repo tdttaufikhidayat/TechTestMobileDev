@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.taufikhidayat.techtestmobiledev.utils.toFriendlyMessage
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
@@ -73,7 +74,7 @@ class SourceViewModel @Inject constructor(
                 _sourcesState.value = UiState.Success(filteredSources)
             }
         } catch (e: Exception) {
-            _sourcesState.value = UiState.Error(e.localizedMessage ?: "Terjadi kesalahan jaringan.")
+            _sourcesState.value = UiState.Error(e.toFriendlyMessage())
         }
     }
 }
