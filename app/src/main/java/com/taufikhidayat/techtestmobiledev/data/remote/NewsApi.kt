@@ -14,6 +14,7 @@ interface NewsApi {
     @GET("everything")
     suspend fun getArticles(
         @Query("sources") sources: String,
+        @Query("q") query: String? = null,
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int
     ): NewsResponse

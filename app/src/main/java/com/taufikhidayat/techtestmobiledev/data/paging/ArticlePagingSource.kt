@@ -9,7 +9,8 @@ import java.io.IOException
 
 class ArticlePagingSource(
     private val api: NewsApi,
-    private val sourceId: String
+    private val sourceId: String,
+    private val query: String? = null
 ) : PagingSource<Int, ArticleDto>() {
 
     override fun getRefreshKey(state: PagingState<Int, ArticleDto>): Int? {
@@ -24,6 +25,7 @@ class ArticlePagingSource(
         return try {
             val response = api.getArticles(
                 sources = sourceId,
+                query = if (query.isNullOrBlank()) null else query,
                 page = currentPage,
                 pageSize = params.loadSize
             )
