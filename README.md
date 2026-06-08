@@ -26,7 +26,7 @@ This project showcases high-level Android development standards, including:
 * **Dynamic Browsing:** Filter news by category and search with debounced inputs.
 * **Offline Support:** Read articles anytime. Data is cached locally, ensuring a smooth experience even without an internet connection.
 * **Robust Error Handling:** User-friendly feedback for network/server exceptions.
-* **Smooth UX:** Pull-to-refresh and skeleton loading states.
+* **Smooth UX:** Skeleton loading states.
 
 ## ⚙️ How to Setup
 1. Clone this repository.
