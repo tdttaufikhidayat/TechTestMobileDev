@@ -94,4 +94,10 @@ dependencies {
 
     // Image Loading
     implementation(libs.coil.compose)
+
+    // Room Database
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
+    ksp(libs.room.compiler)
 }
