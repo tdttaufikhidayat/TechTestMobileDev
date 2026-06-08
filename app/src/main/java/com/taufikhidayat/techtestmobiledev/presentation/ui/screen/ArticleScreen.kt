@@ -21,6 +21,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.taufikhidayat.techtestmobiledev.data.remote.dto.ArticleDto
+import com.taufikhidayat.techtestmobiledev.presentation.ui.components.ArticleShimmerItem
 import com.taufikhidayat.techtestmobiledev.presentation.viewmodel.ArticleViewModel
 import com.taufikhidayat.techtestmobiledev.utils.toFriendlyMessage
 
@@ -67,22 +68,14 @@ fun ArticleScreen(
             articles.apply {
                 when {
                     loadState.refresh is LoadState.Loading -> {
-                        item {
-                            Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator()
-                            }
+                        items(3) {
+                            ArticleShimmerItem()
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
                     loadState.append is LoadState.Loading -> {
                         item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
-                            }
+                            ArticleShimmerItem()
                         }
                     }
                     loadState.refresh is LoadState.Error -> {
