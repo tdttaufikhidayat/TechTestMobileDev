@@ -33,5 +33,6 @@ interface RemoteKeysDao {
 @Database(entities = [ArticleEntity::class, RemoteKeys::class], version = 1, exportSchema = false)
 abstract class NewsDatabase : RoomDatabase() {
     abstract fun articleDao(): ArticleDao
+
     abstract fun remoteKeysDao(): RemoteKeysDao
 }

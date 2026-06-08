@@ -18,24 +18,25 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
-class ArticleViewModel @Inject constructor(
-    private val repository: NewsRepository
-) : ViewModel() {
+class ArticleViewModel
+    @Inject
+    constructor(
+        private val repository: NewsRepository,
+    ) : ViewModel() {
+        private val _searchQuery = MutableStateFlow("")
+        val searchQuery = _searchQuery.asStateFlow()
 
-    private val _searchQuery = MutableStateFlow("")
-    val searchQuery = _searchQuery.asStateFlow()
+        fun setSearchQuery(query: String) {
+            _searchQuery.value = query
+        }
 
-    fun setSearchQuery(query: String) {
-        _searchQuery.value = query
+        // flatMapLatest memastikan jika user mengetik pencarian baru, API lama dibatalkan dan memanggil yang baru
+        fun getArticles(sourceId: String): Flow<PagingData<ArticleDto>> {
+            return _searchQuery
+                .debounce(500L)
+                .flatMapLatest { query ->
+                    repository.getArticles(sourceId, query)
+                }
+                .cachedIn(viewModelScope) // Wajib ada agar Paging tidak crash saat rotasi layar
+        }
     }
-
-    // flatMapLatest memastikan jika user mengetik pencarian baru, API lama dibatalkan dan memanggil yang baru
-    fun getArticles(sourceId: String): Flow<PagingData<ArticleDto>> {
-        return _searchQuery
-            .debounce(500L)
-            .flatMapLatest { query ->
-                repository.getArticles(sourceId, query)
-            }
-            .cachedIn(viewModelScope) // Wajib ada agar Paging tidak crash saat rotasi layar
-    }
-}

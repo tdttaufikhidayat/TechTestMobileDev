@@ -16,26 +16,28 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
+        val loggingInterceptor =
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
 
         // Interceptor untuk otomatis menambahkan API Key di setiap request
-        val apiKeyInterceptor = Interceptor { chain ->
-            val originalRequest = chain.request()
-            val originalHttpUrl = originalRequest.url
+        val apiKeyInterceptor =
+            Interceptor { chain ->
+                val originalRequest = chain.request()
+                val originalHttpUrl = originalRequest.url
 
-            val url = originalHttpUrl.newBuilder()
-                .addQueryParameter("apiKey", BuildConfig.NEWS_API_KEY)
-                .build()
+                val url =
+                    originalHttpUrl.newBuilder()
+                        .addQueryParameter("apiKey", BuildConfig.NEWS_API_KEY)
+                        .build()
 
-            val requestBuilder = originalRequest.newBuilder().url(url)
-            chain.proceed(requestBuilder.build())
-        }
+                val requestBuilder = originalRequest.newBuilder().url(url)
+                chain.proceed(requestBuilder.build())
+            }
 
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)

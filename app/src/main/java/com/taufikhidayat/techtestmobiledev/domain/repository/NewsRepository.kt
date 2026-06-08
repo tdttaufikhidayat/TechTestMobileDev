@@ -7,5 +7,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
     suspend fun getSources(category: String): List<SourceDto>
-    fun getArticles(sourceId: String, query: String? = null): Flow<PagingData<ArticleDto>>
+
+    fun getArticles(
+        sourceId: String,
+        query: String? = null,
+    ): Flow<PagingData<ArticleDto>>
 }

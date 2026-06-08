@@ -29,30 +29,31 @@ class MainActivity : ComponentActivity() {
             TechTestMobileDevTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     val navController = rememberNavController()
 
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.Source.route
+                        startDestination = Screen.Source.route,
                     ) {
                         // 1. Route ke Source Screen (Layar Utama)
                         composable(route = Screen.Source.route) {
                             SourceScreen(
                                 onNavigateToArticle = { sourceId, sourceName ->
                                     navController.navigate(Screen.Article.createRoute(sourceId, sourceName))
-                                }
+                                },
                             )
                         }
 
                         // 2. Route ke Article Screen (Menerima argumen sourceId & sourceName)
                         composable(
                             route = Screen.Article.route,
-                            arguments = listOf(
-                                navArgument("sourceId") { type = NavType.StringType },
-                                navArgument("sourceName") { type = NavType.StringType }
-                            )
+                            arguments =
+                                listOf(
+                                    navArgument("sourceId") { type = NavType.StringType },
+                                    navArgument("sourceName") { type = NavType.StringType },
+                                ),
                         ) { backStackEntry ->
                             val sourceId = backStackEntry.arguments?.getString("sourceId") ?: ""
                             val sourceName = backStackEntry.arguments?.getString("sourceName") ?: ""
@@ -65,16 +66,17 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateBack = {
                                     navController.popBackStack()
-                                }
+                                },
                             )
                         }
 
                         // 3. Route ke Detail Screen (Menerima argumen URL Web)
                         composable(
                             route = Screen.Detail.route,
-                            arguments = listOf(
-                                navArgument("url") { type = NavType.StringType }
-                            )
+                            arguments =
+                                listOf(
+                                    navArgument("url") { type = NavType.StringType },
+                                ),
                         ) { backStackEntry ->
                             val encodedUrl = backStackEntry.arguments?.getString("url") ?: ""
                             // Decode kembali URL-nya agar bisa dibaca WebView
@@ -84,7 +86,7 @@ class MainActivity : ComponentActivity() {
                                 url = url,
                                 onNavigateBack = {
                                     navController.popBackStack()
-                                }
+                                },
                             )
                         }
                     }

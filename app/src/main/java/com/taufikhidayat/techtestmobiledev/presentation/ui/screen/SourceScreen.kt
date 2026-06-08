@@ -24,7 +24,7 @@ import com.taufikhidayat.techtestmobiledev.presentation.viewmodel.SourceViewMode
 @Composable
 fun SourceScreen(
     onNavigateToArticle: (String, String) -> Unit,
-    viewModel: SourceViewModel = hiltViewModel()
+    viewModel: SourceViewModel = hiltViewModel(),
 ) {
     val sourcesState by viewModel.sourcesState.collectAsState()
     val selectedCategory by viewModel.selectedCategory.collectAsState()
@@ -36,31 +36,32 @@ fun SourceScreen(
         // 1. Top Bar & Search
         TopAppBar(
             title = { Text("News Sources", fontWeight = FontWeight.Bold) },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         )
 
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { viewModel.setSearchQuery(it) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             placeholder = { Text("Cari sumber berita...") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
             shape = RoundedCornerShape(12.dp),
-            singleLine = true
+            singleLine = true,
         )
 
         // 2. Categories Row (Story #1)
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(categories) { category ->
                 FilterChip(
                     selected = category == selectedCategory,
                     onClick = { viewModel.setCategory(category) },
-                    label = { Text(category.replaceFirstChar { it.uppercase() }) }
+                    label = { Text(category.replaceFirstChar { it.uppercase() }) },
                 )
             }
         }
@@ -85,7 +86,7 @@ fun SourceScreen(
                     LazyColumn(
                         contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     ) {
                         items(state.data) { source ->
                             SourceItem(source = source, onClick = {
@@ -100,13 +101,17 @@ fun SourceScreen(
 }
 
 @Composable
-fun SourceItem(source: SourceDto, onClick: () -> Unit) {
+fun SourceItem(
+    source: SourceDto,
+    onClick: () -> Unit,
+) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = source.name ?: "", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
@@ -116,7 +121,7 @@ fun SourceItem(source: SourceDto, onClick: () -> Unit) {
             SuggestionChip(
                 onClick = { },
                 label = { Text(source.category ?: "") },
-                modifier = Modifier.height(24.dp)
+                modifier = Modifier.height(24.dp),
             )
         }
     }

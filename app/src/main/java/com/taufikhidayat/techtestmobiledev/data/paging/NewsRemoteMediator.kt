@@ -17,44 +17,48 @@ class NewsRemoteMediator(
     private val api: NewsApi,
     private val db: NewsDatabase,
     private val sourceId: String,
-    private val query: String? = null
+    private val query: String? = null,
 ) : RemoteMediator<Int, ArticleEntity>() {
-
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, ArticleEntity>
+        state: PagingState<Int, ArticleEntity>,
     ): MediatorResult {
-        val page = when (loadType) {
-            LoadType.REFRESH -> {
-                val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
-                remoteKeys?.nextKey?.minus(1) ?: 1
+        val page =
+            when (loadType) {
+                LoadType.REFRESH -> {
+                    val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
+                    remoteKeys?.nextKey?.minus(1) ?: 1
+                }
+                LoadType.PREPEND -> {
+                    val remoteKeys = getRemoteKeyForFirstItem(state)
+                    val prevKey =
+                        remoteKeys?.prevKey
+                            ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                    prevKey
+                }
+                LoadType.APPEND -> {
+                    val remoteKeys = getRemoteKeyForLastItem(state)
+                    val nextKey =
+                        remoteKeys?.nextKey
+                            ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                    nextKey
+                }
             }
-            LoadType.PREPEND -> {
-                val remoteKeys = getRemoteKeyForFirstItem(state)
-                val prevKey = remoteKeys?.prevKey
-                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                prevKey
-            }
-            LoadType.APPEND -> {
-                val remoteKeys = getRemoteKeyForLastItem(state)
-                val nextKey = remoteKeys?.nextKey
-                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                nextKey
-            }
-        }
 
         try {
-            val response = api.getArticles(
-                sources = sourceId,
-                query = if (query.isNullOrBlank()) null else query,
-                page = page,
-                pageSize = state.config.pageSize
-            )
+            val response =
+                api.getArticles(
+                    sources = sourceId,
+                    query = if (query.isNullOrBlank()) null else query,
+                    page = page,
+                    pageSize = state.config.pageSize,
+                )
 
             // Membuang artikel yang tidak punya URL atau judulnya di-remove
-            val articlesDto = response.articles?.filter {
-                it.url != null && it.title != "[Removed]"
-            } ?: emptyList()
+            val articlesDto =
+                response.articles?.filter {
+                    it.url != null && it.title != "[Removed]"
+                } ?: emptyList()
 
             val endOfPaginationReached = articlesDto.isEmpty()
 
@@ -67,23 +71,25 @@ class NewsRemoteMediator(
                 val prevKey = if (page == 1) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
 
-                val keys = articlesDto.map {
-                    RemoteKeys(articleUrl = it.url!!, prevKey = prevKey, nextKey = nextKey)
-                }
+                val keys =
+                    articlesDto.map {
+                        RemoteKeys(articleUrl = it.url!!, prevKey = prevKey, nextKey = nextKey)
+                    }
 
-                val entities = articlesDto.map { dto ->
-                    ArticleEntity(
-                        url = dto.url!!,
-                        sourceId = sourceId,
-                        sourceName = dto.source?.name,
-                        author = dto.author,
-                        title = dto.title,
-                        description = dto.description,
-                        urlToImage = dto.urlToImage,
-                        publishedAt = dto.publishedAt,
-                        content = dto.content
-                    )
-                }
+                val entities =
+                    articlesDto.map { dto ->
+                        ArticleEntity(
+                            url = dto.url!!,
+                            sourceId = sourceId,
+                            sourceName = dto.source?.name,
+                            author = dto.author,
+                            title = dto.title,
+                            description = dto.description,
+                            urlToImage = dto.urlToImage,
+                            publishedAt = dto.publishedAt,
+                            content = dto.content,
+                        )
+                    }
 
                 db.remoteKeysDao().insertAll(keys)
                 db.articleDao().insertAll(entities)

@@ -17,7 +17,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 fun DetailScreen(
     url: String,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
@@ -27,7 +27,7 @@ fun DetailScreen(
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         )
 
         // Membungkus WebView klasik ke dalam Jetpack Compose
@@ -43,7 +43,7 @@ fun DetailScreen(
             update = { webView ->
                 webView.loadUrl(url)
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }

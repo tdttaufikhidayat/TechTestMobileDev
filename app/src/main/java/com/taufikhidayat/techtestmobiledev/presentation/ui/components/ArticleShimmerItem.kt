@@ -15,52 +15,57 @@ fun ArticleShimmerItem() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column {
             // Kotak tiruan untuk Gambar
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-                    .shimmerLoadingAnimation()
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+                        .shimmerLoadingAnimation(),
             )
 
             Column(modifier = Modifier.padding(16.dp)) {
                 // Kotak tiruan untuk Judul Baris 1
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .height(20.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .shimmerLoadingAnimation()
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(0.8f)
+                            .height(20.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .shimmerLoadingAnimation(),
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 // Kotak tiruan untuk Judul Baris 2
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .height(20.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .shimmerLoadingAnimation()
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(0.5f)
+                            .height(20.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .shimmerLoadingAnimation(),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 // Kotak tiruan untuk Deskripsi
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(14.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .shimmerLoadingAnimation()
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(14.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .shimmerLoadingAnimation(),
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(14.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .shimmerLoadingAnimation()
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(0.9f)
+                            .height(14.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .shimmerLoadingAnimation(),
                 )
             }
         }

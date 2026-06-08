@@ -8,7 +8,10 @@ sealed class Screen(val route: String) {
 
     // Melempar ID dan Nama Sumber ke halaman artikel
     object Article : Screen("article_screen/{sourceId}/{sourceName}") {
-        fun createRoute(sourceId: String, sourceName: String): String {
+        fun createRoute(
+            sourceId: String,
+            sourceName: String,
+        ): String {
             return "article_screen/$sourceId/$sourceName"
         }
     }

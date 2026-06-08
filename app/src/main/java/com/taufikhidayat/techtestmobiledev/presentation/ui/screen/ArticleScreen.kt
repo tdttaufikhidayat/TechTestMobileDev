@@ -32,7 +32,7 @@ fun ArticleScreen(
     sourceName: String,
     onNavigateToDetail: (String) -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: ArticleViewModel = hiltViewModel()
+    viewModel: ArticleViewModel = hiltViewModel(),
 ) {
     // Collect data Paging dari ViewModel
     val articles = viewModel.getArticles(sourceId).collectAsLazyPagingItems()
@@ -45,13 +45,13 @@ fun ArticleScreen(
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         )
 
         LazyColumn(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             // Render list artikel
             items(articles.itemCount) { index ->
@@ -60,7 +60,7 @@ fun ArticleScreen(
                         article = article,
                         onClick = {
                             article.url?.let { onNavigateToDetail(it) }
-                        }
+                        },
                     )
                 }
             }
@@ -83,7 +83,7 @@ fun ArticleScreen(
                         item {
                             ErrorItem(
                                 message = e.error.toFriendlyMessage(),
-                                onRetry = { retry() }
+                                onRetry = { retry() },
                             )
                         }
                     }
@@ -92,7 +92,7 @@ fun ArticleScreen(
                         item {
                             ErrorItem(
                                 message = e.error.toFriendlyMessage(),
-                                onRetry = { retry() }
+                                onRetry = { retry() },
                             )
                         }
                     }
@@ -103,13 +103,17 @@ fun ArticleScreen(
 }
 
 @Composable
-fun ArticleItem(article: ArticleDto, onClick: () -> Unit) {
+fun ArticleItem(
+    article: ArticleDto,
+    onClick: () -> Unit,
+) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column {
             // Image Loading menggunakan Coil
@@ -117,10 +121,11 @@ fun ArticleItem(article: ArticleDto, onClick: () -> Unit) {
                 model = article.urlToImage,
                 contentDescription = article.title,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
             )
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
@@ -128,20 +133,20 @@ fun ArticleItem(article: ArticleDto, onClick: () -> Unit) {
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = article.description ?: "",
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = article.publishedAt?.take(10) ?: "", // Ambil format YYYY-MM-DD
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray
+                    color = Color.Gray,
                 )
             }
         }
@@ -149,12 +154,16 @@ fun ArticleItem(article: ArticleDto, onClick: () -> Unit) {
 }
 
 @Composable
-fun ErrorItem(message: String, onRetry: () -> Unit) {
+fun ErrorItem(
+    message: String,
+    onRetry: () -> Unit,
+) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(text = message, color = Color.Red)
         Spacer(modifier = Modifier.height(8.dp))
